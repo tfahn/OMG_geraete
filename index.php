@@ -1,11 +1,13 @@
 <?php
+require ('connectDB.php');
 if (isset($_POST['hinzugefugt'])){
     $howmuch = runSQL("SELECT * FROM geraete WHERE ID = '$_POST[ID]'");
     $data = mysqli_fetch_array($howmuch, MYSQLI_NUM);
     if($data[0] > 1){
         if($_POST['selectoroverride'] == 'add'){
             $problems = runSQL("SELECT Probleme FROM geraete WHERE ID = '$_POST[ID]' ");
-            runSQL("UPDATE geraete SET Probleme = '$problems . $_POST[problem]' WHERE ID = '$_POST[ID]' ");
+            $data2 = mysqli_fetch_array($problems);
+            runSQL("UPDATE geraete SET Probleme = '$data[0] . $_POST[problem]' WHERE ID = '$_POST[ID]' ");
             echo("<div id=\"content\">");
             echo ("<p>Es wurde ein Geräte-Defekt hinzugefügt</p>");
             echo ("Weiterleitung...");
@@ -41,7 +43,7 @@ if (isset($_POST['hinzugefugt'])){
         ID:<input type="number" name="ID"><br><br>
         <input type="radio" name="selectoroverride" value="add" checked>Geräte-Defekt zu bestehenden hinzufügen<br><br>
         <input type="radio" name="selectoroverride" value="override">Geräte-Defekte überschreiben und dieses als einziges Geräte-Defekt setzen<br>
-        <br>Problem:<input type="text"  name="problem"><br><br> 
+        <br>Problem:<input type="text"  name="problem"><br><br>
         <input type="submit" name="hinzugefugt" value="Bestätigen">
     </form>
     </body>
